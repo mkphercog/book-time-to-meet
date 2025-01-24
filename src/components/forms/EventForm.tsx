@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { AlertDialogHeader } from "../ui/alert-dialog";
 import {
   AlertDialogAction,
@@ -193,10 +193,20 @@ export const EventForm = ({ event }: EventFormProps) => {
               </AlertDialogContent>
             </AlertDialog>
           )}
-          <Button asChild variant="outline" type="button">
+          <Button
+            asChild
+            variant="outline"
+            type="button"
+            disabled={isDeletePending || form.formState.isSubmitting}
+          >
             <Link href="/events">Cancel</Link>
           </Button>
-          <Button type="submit">Save</Button>
+          <Button
+            type="submit"
+            disabled={isDeletePending || form.formState.isSubmitting}
+          >
+            Save
+          </Button>
         </div>
       </form>
     </Form>
