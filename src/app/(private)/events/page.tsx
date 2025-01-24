@@ -11,15 +11,16 @@ import {
 import { db } from "@/drizzle/db";
 import { formatEventDescription } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { EventFormSchemaType } from "@/schema/events";
 import { auth } from "@clerk/nextjs/server";
 import { CalendarPlus, CalendarRange } from "lucide-react";
 import Link from "next/link";
 
+export const revalidate = 0;
+
 export default async function EventsPage() {
   const { userId, redirectToSignIn } = auth();
 
-  if (userId === null) return redirectToSignIn();
+  if (userId == null) return redirectToSignIn();
 
   const events = await db.query.EventTable.findMany({
     where: ({ clerkUserId }, { eq }) => eq(clerkUserId, userId),
