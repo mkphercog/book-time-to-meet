@@ -1,9 +1,8 @@
+import type { FC, PropsWithChildren } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { ReactNode } from "react";
-
-export default function AuthLayout({ children }: { children: ReactNode }) {
+const AuthLayout: FC<PropsWithChildren> = ({ children }) => {
   const { userId } = auth();
 
   if (userId != null) redirect("/");
@@ -13,4 +12,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       {children}
     </div>
   );
-}
+};
+
+export default AuthLayout;

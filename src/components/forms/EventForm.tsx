@@ -2,7 +2,11 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EventFormSchemaType, eventFormSchema } from "@/schema/events";
+import {
+  EventFormSchemaType,
+  eventFormDefaultsValues,
+  eventFormSchema,
+} from "@/schema/events";
 import {
   Form,
   FormControl,
@@ -47,10 +51,7 @@ export const EventForm = ({ event }: EventFormProps) => {
   const [isDeletePending, startDeleteTransition] = useTransition();
   const form = useForm<EventFormSchemaType>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: event ?? {
-      isActive: true,
-      durationInMinutes: 30,
-    },
+    defaultValues: event ?? eventFormDefaultsValues,
   });
 
   const onSubmit = async (values: EventFormSchemaType) => {

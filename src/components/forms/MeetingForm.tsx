@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,23 +14,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Textarea } from "../ui/textarea";
-import { Switch } from "../ui/switch";
-import { createEvent, deleteEvent, updateEvent } from "@/server/actions/events";
+import { useMemo } from "react";
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { useMemo, useTransition } from "react";
-import { AlertDialogHeader } from "../ui/alert-dialog";
-import {
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@radix-ui/react-alert-dialog";
-import { MeetingFormSchemaType, meetingFormSchema } from "@/schema/meetings";
+  MeetingFormSchemaType,
+  meetingFormDefaultValues,
+  meetingFormSchema,
+} from "@/schema/meetings";
 import {
   Select,
   SelectContent,
@@ -65,9 +53,7 @@ export const MeetingForm = ({
 }: MeetingFormProps) => {
   const form = useForm<MeetingFormSchemaType>({
     resolver: zodResolver(meetingFormSchema),
-    defaultValues: {
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    },
+    defaultValues: meetingFormDefaultValues,
   });
 
   const timezone = form.watch("timezone");

@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { db } from "@/drizzle/db";
+import { cn } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
 import { CopyEventButton } from "@/components/CopyEventButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,12 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { db } from "@/drizzle/db";
 import { formatEventDescription } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
-import { auth } from "@clerk/nextjs/server";
 import { CalendarPlus, CalendarRange } from "lucide-react";
-import Link from "next/link";
 
 export const revalidate = 0;
 

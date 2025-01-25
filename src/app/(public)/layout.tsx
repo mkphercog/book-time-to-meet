@@ -1,5 +1,7 @@
-import { ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 
-export default function PublicLayout({ children }: { children: ReactNode }) {
+const PublicLayout: FC<PropsWithChildren> = ({ children }) => {
   return <main className="container my-6">{children}</main>;
-}
+};
+
+export default PublicLayout;

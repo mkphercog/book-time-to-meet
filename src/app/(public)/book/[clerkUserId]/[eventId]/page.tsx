@@ -22,11 +22,13 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
+type BookEventPageProps = {
+  params: { clerkUserId: string; eventId: string };
+};
+
 export default async function BookEventPage({
   params: { clerkUserId, eventId },
-}: {
-  params: { clerkUserId: string; eventId: string };
-}) {
+}: BookEventPageProps) {
   const event = await db.query.EventTable.findFirst({
     where: ({ clerkUserId: userIdCol, isActive, id }, { and, eq }) =>
       and(eq(userIdCol, clerkUserId), eq(isActive, true), eq(id, eventId)),

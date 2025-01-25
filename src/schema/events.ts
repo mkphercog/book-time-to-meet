@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const eventFormSchema = z.object({
-  name: z.string().min(1, "Required"),
+  name: z.string().min(1, "Required").max(30, "Max 30 characters."),
   description: z.string().optional(),
   isActive: z.boolean().default(true),
   durationInMinutes: z.coerce
@@ -12,3 +12,10 @@ export const eventFormSchema = z.object({
 });
 
 export type EventFormSchemaType = z.infer<typeof eventFormSchema>;
+
+export const eventFormDefaultsValues: EventFormSchemaType = {
+  name: "",
+  description: "",
+  isActive: true,
+  durationInMinutes: 30,
+};

@@ -24,3 +24,13 @@ export const meetingActionSchema = z
 
 export type MeetingFormSchemaType = z.infer<typeof meetingFormSchema>;
 export type MeetingActionSchemaType = z.infer<typeof meetingActionSchema>;
+
+export const meetingFormDefaultValues: Omit<
+  MeetingFormSchemaType,
+  "startTime" | "date"
+> = {
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  guestName: "",
+  guestEmail: "",
+  guestNotes: undefined,
+};

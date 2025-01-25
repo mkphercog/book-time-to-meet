@@ -1,9 +1,9 @@
+import type { FC, PropsWithChildren } from "react";
 import { NavLink } from "@/components/NavLink";
 import { UserButton } from "@clerk/nextjs";
 import { CalendarRange } from "lucide-react";
-import { ReactNode } from "react";
 
-export default function PrivateLayout({ children }: { children: ReactNode }) {
+const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <header className="flex py-2 border-b bg-card">
@@ -24,4 +24,6 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
       <main className="container my-6 mx-auto">{children}</main>
     </>
   );
-}
+};
+
+export default PrivateLayout;

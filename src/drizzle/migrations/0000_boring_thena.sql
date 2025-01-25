@@ -1,5 +1,5 @@
 DO $$ BEGIN
- CREATE TYPE "public"."day" AS ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'firday', 'saturday', 'sunday');
+ CREATE TYPE "public"."day" AS ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

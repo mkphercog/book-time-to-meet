@@ -9,18 +9,19 @@ import {
 } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { formatEventDescription } from "@/lib/formatters";
-
 import { clerkClient } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
+type BookingPageProps = {
+  params: { clerkUserId: string };
+};
+
 export default async function BookingPage({
   params: { clerkUserId },
-}: {
-  params: { clerkUserId: string };
-}) {
+}: BookingPageProps) {
   const events = await db.query.EventTable.findMany({
     where: ({ clerkUserId: userIdCol, isActive }, { eq, and }) =>
       and(eq(userIdCol, clerkUserId), eq(isActive, true)),

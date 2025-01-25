@@ -1,4 +1,5 @@
 "use server";
+
 import "use-server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { google } from "googleapis";
@@ -95,10 +96,17 @@ export const createCalendarEvent = async ({
         {
           email: calendarUser.primaryEmailAddress.emailAddress,
           displayName: calendarUser.fullName,
-          responseStatus: "needsAction",
+          responseStatus: "accepted",
         },
-        {},
       ],
+      reminders: {
+        overrides: [
+          { method: "email", minutes: 1440 },
+          { method: "email", minutes: 60 },
+          { method: "popup", minutes: 10 },
+        ],
+        useDefault: false,
+      },
       description: guestNotes ? `Additional details: ${guestNotes}` : undefined,
       start: {
         dateTime: startTime.toISOString(),
@@ -109,6 +117,60 @@ export const createCalendarEvent = async ({
       summary: `${guestName} + ${calendarUser.fullName}: ${eventName}`,
     },
   });
+
+  const gmail = google.gmail({ version: "v1", auth: oAuthClient });
+
+  const messageParts = [
+    `To: ${calendarUser.primaryEmailAddress.emailAddress}`,
+    `From: ${calendarUser.fullName} <${calendarUser.primaryEmailAddress.emailAddress}>`,
+    `Subject: New meeting with ${guestName}!`,
+    "Content-Type: text/html; charset=UTF-8",
+    `
+    <html>
+      <body>
+        <h2>Nowe wydarzenie w kalendarzu!</h2>
+        <p>
+          Z maila <b>${guestEmail}</b> utworzono nowe wydarzenie: <b>${eventName}</b>
+        </p>
+        <p>
+          Spotkanie odbędzie się dnia: <b>${startTime.toLocaleDateString()}</b>
+        </p>
+        <p>
+          Czas spotkania: <b>${startTime.toLocaleTimeString()} - ${addMinutes(
+      startTime,
+      durationInMinutes
+    ).toLocaleTimeString()}</b>
+        </p>
+        ${
+          guestNotes &&
+          `
+            <p>
+            Komentarz do spotkania: <b>${guestNotes}</b>
+            </p>
+          `
+        }
+      </body>
+    </html>
+    `,
+  ];
+
+  const message = messageParts.join("\n");
+
+  const encodedMessage = Buffer.from(message)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+  try {
+    await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+      },
+    });
+  } catch (error: any) {
+    console.error("Gmail error: ", error?.response?.data || error?.message);
+  }
 
   return calendarEvent.data;
 };

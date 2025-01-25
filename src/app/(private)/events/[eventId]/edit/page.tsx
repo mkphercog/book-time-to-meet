@@ -1,16 +1,18 @@
-import { EventForm } from "@/components/forms/EventForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/drizzle/db";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
+import { EventForm } from "@/components/forms/EventForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const revalidate = 0;
 
+type EditEventPageProps = {
+  params: { eventId: string };
+};
+
 export default async function EditEventPage({
   params: { eventId },
-}: {
-  params: { eventId: string };
-}) {
+}: EditEventPageProps) {
   const { userId, redirectToSignIn } = auth();
 
   if (userId == null) return redirectToSignIn();
