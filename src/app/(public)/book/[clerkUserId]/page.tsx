@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,11 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ROUTES } from "@/data/routes";
 import { db } from "@/drizzle/db";
 import { formatEventDescription } from "@/lib/formatters";
 import { clerkClient } from "@clerk/nextjs/server";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
@@ -74,7 +75,7 @@ const EventCard = ({
       {description != null && <CardContent>{description}</CardContent>}
       <CardFooter className="flex justify-end gap-2 mt-auto">
         <Button asChild>
-          <Link href={`/book/${clerkUserId}/${id}`}>Select</Link>
+          <Link href={ROUTES.book.eventDetails(clerkUserId, id)}>Select</Link>
         </Button>
       </CardFooter>
     </Card>

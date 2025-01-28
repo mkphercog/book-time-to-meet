@@ -7,6 +7,7 @@ import { EventFormSchemaType, eventFormSchema } from "@/schema/events";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
+import { ROUTES } from "@/data/routes";
 
 export async function createEvent(
   unsafeData: EventFormSchemaType
@@ -19,7 +20,7 @@ export async function createEvent(
   }
 
   await db.insert(EventTable).values({ ...data, clerkUserId: userId });
-  redirect("/events");
+  redirect(ROUTES.events.home());
 }
 
 export async function updateEvent(
@@ -42,7 +43,7 @@ export async function updateEvent(
     return { error: true };
   }
 
-  redirect("/events");
+  redirect(ROUTES.events.home());
 }
 
 export const deleteEvent = async (
@@ -58,5 +59,5 @@ export const deleteEvent = async (
     .delete(EventTable)
     .where(and(eq(EventTable.id, id), eq(EventTable.clerkUserId, userId)));
 
-  redirect("/events");
+  redirect(ROUTES.events.home());
 };

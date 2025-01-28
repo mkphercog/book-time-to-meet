@@ -36,6 +36,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@radix-ui/react-alert-dialog";
+import { ROUTES } from "@/data/routes";
 
 type EventFormProps = {
   event?: {
@@ -200,7 +201,7 @@ export const EventForm = ({ event }: EventFormProps) => {
             type="button"
             disabled={isDeletePending || form.formState.isSubmitting}
           >
-            <Link href="/events">Cancel</Link>
+            <Link href={ROUTES.events.home()}>Cancel</Link>
           </Button>
           <Button
             type="submit"

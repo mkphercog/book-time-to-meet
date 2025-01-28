@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { formatEventDescription } from "@/lib/formatters";
 import { CalendarPlus, CalendarRange } from "lucide-react";
+import { ROUTES } from "@/data/routes";
 
 export const revalidate = 0;
 
@@ -34,7 +35,7 @@ export default async function EventsPage() {
           Events
         </h1>
         <Button asChild>
-          <Link href="/events/new">
+          <Link href={ROUTES.events.new()}>
             <CalendarPlus className="mr-4 size-6" /> New Event
           </Link>
         </Button>
@@ -51,7 +52,7 @@ export default async function EventsPage() {
           You do not have any events yet. Create your first event to get
           started!
           <Button size="lg" className="text-lg" asChild>
-            <Link href="/events/new">
+            <Link href={ROUTES.events.new()}>
               <CalendarPlus className="mr-4 size-6" /> New Event
             </Link>
           </Button>
@@ -96,7 +97,7 @@ const EventCard = ({
           />
         )}
         <Button asChild>
-          <Link href={`/events/${id}/edit`}>Edit</Link>
+          <Link href={ROUTES.events.edit(id)}>Edit</Link>
         </Button>
       </CardFooter>
     </Card>

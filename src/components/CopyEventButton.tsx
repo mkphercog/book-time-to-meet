@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button, ButtonProps } from "./ui/button";
 import { Copy, CopyCheck, CopyX } from "lucide-react";
+import { ROUTES } from "@/data/routes";
 
 type CopyState = "idle" | "copied" | "error";
 
@@ -23,7 +24,7 @@ export const CopyEventButton = ({
       {...buttonProps}
       onClick={() => {
         navigator.clipboard
-          .writeText(`${location.origin}/book/${clerkUserId}/${eventId}`)
+          .writeText(ROUTES.book.copyLink(clerkUserId, eventId))
           .then(() => {
             setCopyState("copied");
             setTimeout(() => {

@@ -10,6 +10,7 @@ import "use-server";
 import { createCalendarEvent } from "./googleCalendar";
 import { redirect } from "next/navigation";
 import { fromZonedTime } from "date-fns-tz";
+import { ROUTES } from "@/data/routes";
 
 export const createMeeting = async (unsafeData: MeetingActionSchemaType) => {
   const { success, data } = meetingActionSchema.safeParse(unsafeData);
@@ -46,8 +47,10 @@ export const createMeeting = async (unsafeData: MeetingActionSchemaType) => {
   });
 
   redirect(
-    `/book/${data.clerkUserId}/${
-      data.eventId
-    }/success?startTime=${data.startTime.toISOString()}`
+    ROUTES.book.succes(
+      data.clerkUserId,
+      data.eventId,
+      data.startTime.toISOString()
+    )
   );
 };

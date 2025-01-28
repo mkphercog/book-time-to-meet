@@ -2,6 +2,7 @@ import type { FC, PropsWithChildren } from "react";
 import { NavLink } from "@/components/NavLink";
 import { UserButton } from "@clerk/nextjs";
 import { CalendarRange } from "lucide-react";
+import { ROUTES } from "@/data/routes";
 
 const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -12,8 +13,8 @@ const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
             <CalendarRange className="size-6" />
             <span className="sr-only md:not-sr-only">Book time to meet!</span>
           </div>
-          <NavLink href="/events">Events</NavLink>
-          <NavLink href="/schedule">Schedule</NavLink>
+          <NavLink href={ROUTES.events.home()}>Events</NavLink>
+          <NavLink href={ROUTES.schedule.home()}>Schedule</NavLink>
           <div className="ml-auto size-10">
             <UserButton
               appearance={{ elements: { userButtonAvatarBox: "size-full" } }}

@@ -39,6 +39,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { toZonedTime } from "date-fns-tz";
 import { createMeeting } from "@/server/actions/meetings";
+import { ROUTES } from "@/data/routes";
 
 type MeetingFormProps = {
   validTimes: Date[];
@@ -249,7 +250,7 @@ export const MeetingForm = ({
             type="button"
             disabled={form.formState.isSubmitting}
           >
-            <Link href={`/book/${clerkUserId}`}>Cancel</Link>
+            <Link href={ROUTES.book.allUserEvents(clerkUserId)}>Cancel</Link>
           </Button>
           <Button type="submit" disabled={form.formState.isSubmitting}>
             Schedule

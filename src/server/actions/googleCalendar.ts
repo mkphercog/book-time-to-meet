@@ -96,7 +96,7 @@ export const createCalendarEvent = async ({
         {
           email: calendarUser.primaryEmailAddress.emailAddress,
           displayName: calendarUser.fullName,
-          responseStatus: "accepted",
+          responseStatus: "needsAction",
         },
       ],
       reminders: {
