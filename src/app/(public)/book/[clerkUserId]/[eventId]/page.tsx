@@ -17,6 +17,7 @@ import { db } from "@/drizzle/db";
 import { getValidTimesFromSchedule } from "@/lib/getValidTimesFromSchedule";
 import { clerkClient } from "@clerk/nextjs/server";
 import { NoTimeSlots } from "@/components/bookPages";
+import { AppName } from "@/components/AppName";
 
 export const revalidate = 0;
 
@@ -51,22 +52,26 @@ export default async function BookEventPage({
   }
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>
-          Book {`"${event.name}"`} with {calendarUser.fullName}
-        </CardTitle>
-        {event.description && (
-          <CardDescription>{event.description}</CardDescription>
-        )}
-      </CardHeader>
-      <CardContent>
-        <MeetingForm
-          validTimes={validTimes}
-          eventId={event.id}
-          clerkUserId={clerkUserId}
-        />
-      </CardContent>
-    </Card>
+    <>
+      <AppName />
+      <Card className="max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle>
+            Book {`"${event.name}"`} with {calendarUser.fullName}
+          </CardTitle>
+          {event.description && (
+            <CardDescription>{event.description}</CardDescription>
+          )}
+        </CardHeader>
+        <CardContent>
+          <MeetingForm
+            validTimes={validTimes}
+            eventId={event.id}
+            clerkUserId={clerkUserId}
+            durationInMinutes={event.durationInMinutes}
+          />
+        </CardContent>
+      </Card>
+    </>
   );
 }

@@ -17,7 +17,7 @@ import { isSameDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { formatDate } from "@/lib/formatters";
 import { Control } from "react-hook-form";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { MeetingFormSchemaType } from "@/schema/meetings";
 
 type MeetingDateFieldProps = {
@@ -29,12 +29,14 @@ export const MeetingDateField: FC<MeetingDateFieldProps> = ({
   formControl,
   validTimesInTimezone,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <FormField
       control={formControl}
       name="date"
       render={({ field }) => (
-        <Popover>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
           <FormItem className="flex-1">
             <FormLabel>Date</FormLabel>
             <PopoverTrigger asChild>
@@ -59,7 +61,10 @@ export const MeetingDateField: FC<MeetingDateFieldProps> = ({
               <Calendar
                 mode="single"
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={(data) => {
+                  field.onChange(data);
+                  setIsOpen((state) => !state);
+                }}
                 weekStartsOn={1}
                 disabled={(date) =>
                   !validTimesInTimezone.some((time) => isSameDay(date, time))

@@ -26,17 +26,21 @@ import { ROUTES } from "@/data/routes";
 import { MeetingDateField } from "./MeetingDateField";
 import { MeetingTimeField } from "./MeetingTimeField";
 import { TimezoneField } from "../shared/TimezoneField";
+import { formatEventDescription } from "@/lib/formatters";
+import { Info } from "lucide-react";
 
 type MeetingFormProps = {
   validTimes: Date[];
   eventId: string;
   clerkUserId: string;
+  durationInMinutes: number;
 };
 
 export const MeetingForm = ({
   validTimes,
   eventId,
   clerkUserId,
+  durationInMinutes,
 }: MeetingFormProps) => {
   const form = useForm<MeetingFormSchemaType>({
     resolver: zodResolver(meetingFormSchema),
@@ -89,6 +93,13 @@ export const MeetingForm = ({
             validTimesInTimezone={validTimesInTimezone}
             watchers={watchers}
           />
+        </div>
+
+        <div className="flex items-center gap-1 text-sm">
+          <Info className="h-5 w-5 text-blue-950" /> Event duration time:
+          <span className="font-semibold">
+            {formatEventDescription(durationInMinutes)}
+          </span>
         </div>
 
         <div className="flex gap-4 flex-col md:flex-row">
@@ -145,7 +156,7 @@ export const MeetingForm = ({
             <Link href={ROUTES.book.allUserEvents(clerkUserId)}>Cancel</Link>
           </Button>
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            Book
+            Submit
           </Button>
         </div>
       </form>
