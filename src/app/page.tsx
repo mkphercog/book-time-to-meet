@@ -10,10 +10,10 @@ export default function Home() {
   if (userId != null) redirect(ROUTES.events.home());
 
   return (
-    <main className="text-center container my-4 mx-auto">
-      <h1 className="text-3xl mb-4">Book time to meet!</h1>
+    <main className="text-center container mx-auto">
+      <h1 className="text-3xl pt-10 mb-4">Book time to meet!</h1>
       <p>{`This part of app is just for owner of the web, you can't sign in or sign up :)`}</p>
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 justify-center mt-10">
         <Button asChild>
           <SignInButton />
         </Button>

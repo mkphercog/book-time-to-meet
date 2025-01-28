@@ -35,7 +35,7 @@ export default async function SuccessPage({
     <Card className="max-w-xl mx-auto">
       <CardHeader>
         <CardTitle>
-          Successfully Booked {`"${event.name}"`} with {calendarUser.fullName}
+          Successfully booked {`"${event.name}"`} with {calendarUser.fullName}
         </CardTitle>
         <CardDescription>{formatDateTime(startTimeDate)}</CardDescription>
       </CardHeader>

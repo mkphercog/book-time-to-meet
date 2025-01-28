@@ -1,25 +1,22 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { MeetingForm } from "@/components/forms/MeetingForm";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ROUTES } from "@/data/routes";
-import { db } from "@/drizzle/db";
-import { getValidTimesFromSchedule } from "@/lib/getValidTimesFromSchedule";
-import { clerkClient } from "@clerk/nextjs/server";
 import {
   addMonths,
   eachMinuteOfInterval,
   endOfDay,
   roundToNearestMinutes,
 } from "date-fns";
+import { notFound } from "next/navigation";
+import { MeetingForm } from "@/components/forms/MeetingForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { db } from "@/drizzle/db";
+import { getValidTimesFromSchedule } from "@/lib/getValidTimesFromSchedule";
+import { clerkClient } from "@clerk/nextjs/server";
+import { NoTimeSlots } from "@/components/bookPages";
 
 export const revalidate = 0;
 
@@ -42,7 +39,6 @@ export default async function BookEventPage({
     nearestTo: 15,
     roundingMethod: "ceil",
   });
-
   const endDate = endOfDay(addMonths(startDate, 2));
 
   const validTimes = await getValidTimesFromSchedule(
@@ -74,38 +70,3 @@ export default async function BookEventPage({
     </Card>
   );
 }
-
-const NoTimeSlots = ({
-  event,
-  calendarUser,
-}: {
-  event: { name: string; description: string | null };
-  calendarUser: {
-    id: string;
-    fullName: string | null;
-  };
-}) => {
-  return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>
-          Book {`"${event.name}"`} with {calendarUser.fullName}
-        </CardTitle>
-        {event.description && (
-          <CardDescription>{event.description}</CardDescription>
-        )}
-      </CardHeader>
-      <CardContent>
-        {calendarUser.fullName} is currently booked up. Please check back later
-        or choose a shorter event.
-      </CardContent>
-      <CardFooter>
-        <Button asChild>
-          <Link href={ROUTES.book.allUserEvents(calendarUser.id)}>
-            Choose Another Event
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-};

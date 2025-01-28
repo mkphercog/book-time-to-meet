@@ -1,18 +1,6 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ROUTES } from "@/data/routes";
 import { db } from "@/drizzle/db";
-import { formatEventDescription } from "@/lib/formatters";
 import { clerkClient } from "@clerk/nextjs/server";
+import { EventToBookCard, BookEventEmptyState } from "@/components/bookPages";
 
 export const revalidate = 0;
 
@@ -29,7 +17,6 @@ export default async function BookingPage({
     orderBy: ({ name }, { asc, sql }) => asc(sql`lower(${name})`),
   });
 
-  if (events.length === 0) return notFound();
   const { fullName } = await clerkClient().users.getUser(clerkUserId);
   return (
     <div className="max-w-5xl mx-auto">
@@ -41,43 +28,12 @@ export default async function BookingPage({
         event to my calendar.
       </div>
       <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-        {events.map((event) => (
-          <EventCard key={event.id} {...event} />
-        ))}
+        {events.length === 0 ? (
+          <BookEventEmptyState />
+        ) : (
+          events.map((event) => <EventToBookCard key={event.id} {...event} />)
+        )}
       </div>
     </div>
   );
 }
-
-type EventCardProps = {
-  id: string;
-  name: string;
-  description: string | null;
-  durationInMinutes: number;
-  clerkUserId: string;
-};
-
-const EventCard = ({
-  id,
-  name,
-  description,
-  durationInMinutes,
-  clerkUserId,
-}: EventCardProps) => {
-  return (
-    <Card className="flex flex-col">
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>
-          {formatEventDescription(durationInMinutes)}
-        </CardDescription>
-      </CardHeader>
-      {description != null && <CardContent>{description}</CardContent>}
-      <CardFooter className="flex justify-end gap-2 mt-auto">
-        <Button asChild>
-          <Link href={ROUTES.book.eventDetails(clerkUserId, id)}>Select</Link>
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-};
