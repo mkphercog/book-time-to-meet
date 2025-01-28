@@ -4,6 +4,7 @@ import "use-server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { google } from "googleapis";
 import { addMinutes, endOfDay, startOfDay } from "date-fns";
+import { sendEmailAboutNewMeeting } from "./googleGmail";
 
 export async function getCalendarEventTimes(
   clerkUserId: string,
@@ -118,59 +119,20 @@ export const createCalendarEvent = async ({
     },
   });
 
-  const gmail = google.gmail({ version: "v1", auth: oAuthClient });
-
-  const messageParts = [
-    `To: ${calendarUser.primaryEmailAddress.emailAddress}`,
-    `From: ${calendarUser.fullName} <${calendarUser.primaryEmailAddress.emailAddress}>`,
-    `Subject: New meeting with ${guestName}!`,
-    "Content-Type: text/html; charset=UTF-8",
-    `
-    <html>
-      <body>
-        <h2>Nowe wydarzenie w kalendarzu!</h2>
-        <p>
-          Z maila <b>${guestEmail}</b> utworzono nowe wydarzenie: <b>${eventName}</b>
-        </p>
-        <p>
-          Spotkanie odbędzie się dnia: <b>${startTime.toLocaleDateString()}</b>
-        </p>
-        <p>
-          Czas spotkania: <b>${startTime.toLocaleTimeString()} - ${addMinutes(
+  sendEmailAboutNewMeeting({
+    oAuthClient,
+    calendarUser,
+    guest: {
+      name: guestName,
+      email: guestEmail,
+      notes: guestNotes,
+    },
+    event: {
+      name: eventName,
       startTime,
-      durationInMinutes
-    ).toLocaleTimeString()}</b>
-        </p>
-        ${
-          guestNotes &&
-          `
-            <p>
-            Komentarz do spotkania: <b>${guestNotes}</b>
-            </p>
-          `
-        }
-      </body>
-    </html>
-    `,
-  ];
-
-  const message = messageParts.join("\n");
-
-  const encodedMessage = Buffer.from(message)
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-  try {
-    await gmail.users.messages.send({
-      userId: "me",
-      requestBody: {
-        raw: encodedMessage,
-      },
-    });
-  } catch (error: any) {
-    console.error("Gmail error: ", error?.response?.data || error?.message);
-  }
+      durationInMinutes,
+    },
+  });
 
   return calendarEvent.data;
 };

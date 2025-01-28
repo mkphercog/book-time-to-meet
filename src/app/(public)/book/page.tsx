@@ -3,9 +3,9 @@ import { ROUTES } from "@/data/routes";
 import { db } from "@/drizzle/db";
 
 const HomeBookPage = async () => {
-  const userData = await db.query.EventTable.findFirst({
-    where: ({ isActive }, { eq }) => {
-      return eq(isActive, true);
+  const userData = await db.query.ScheduleTable.findFirst({
+    where: ({ timezone }, { isNotNull }) => {
+      return isNotNull(timezone);
     },
   });
 

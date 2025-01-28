@@ -5,7 +5,7 @@ import {
   roundToNearestMinutes,
 } from "date-fns";
 import { notFound } from "next/navigation";
-import { MeetingForm } from "@/components/forms/MeetingForm";
+import { MeetingForm } from "@/components/forms/meeting";
 import {
   Card,
   CardContent,

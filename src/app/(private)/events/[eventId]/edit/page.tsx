@@ -1,7 +1,7 @@
 import { db } from "@/drizzle/db";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import { EventForm } from "@/components/forms/EventForm";
+import { EventForm } from "@/components/forms/event";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const revalidate = 0;

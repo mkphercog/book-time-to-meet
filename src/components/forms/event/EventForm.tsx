@@ -15,28 +15,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import Link from "next/link";
-import { Textarea } from "../ui/textarea";
-import { Switch } from "../ui/switch";
-import { createEvent, deleteEvent, updateEvent } from "@/server/actions/events";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
+import { Textarea } from "../../ui/textarea";
+import { Switch } from "../../ui/switch";
+import { createEvent, updateEvent } from "@/server/actions/events";
 import { useTransition } from "react";
-import { AlertDialogHeader } from "../ui/alert-dialog";
-import {
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@radix-ui/react-alert-dialog";
 import { ROUTES } from "@/data/routes";
+import { DeleteEventAlert } from "./DeleteEventAlert";
 
 type EventFormProps = {
   event?: {
@@ -55,15 +43,19 @@ export const EventForm = ({ event }: EventFormProps) => {
     defaultValues: event ?? eventFormDefaultsValues,
   });
 
+  const setFormError = (type: "saving" | "deleting") => {
+    form.setError("root", {
+      message: `There was an error during ${type} your event`,
+    });
+  };
+
   const onSubmit = async (values: EventFormSchemaType) => {
     const action =
       event == null ? createEvent : updateEvent.bind(null, event.id);
     const data = await action(values);
 
     if (data?.error) {
-      form.setError("root", {
-        message: "There was an error saving your event",
-      });
+      setFormError("saving");
     }
   };
 
@@ -78,6 +70,7 @@ export const EventForm = ({ event }: EventFormProps) => {
             {form.formState.errors.root.message}
           </div>
         )}
+
         <FormField
           control={form.control}
           name="name"
@@ -151,50 +144,15 @@ export const EventForm = ({ event }: EventFormProps) => {
 
         <div className="flex gap-2 justify-end">
           {event && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructiveGhost"
-                  disabled={isDeletePending || form.formState.isSubmitting}
-                >
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your event.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <Button
-                      variant="destructive"
-                      disabled={isDeletePending || form.formState.isSubmitting}
-                      onClick={() => {
-                        startDeleteTransition(async () => {
-                          const data = await deleteEvent(event.id);
-
-                          if (data?.error) {
-                            form.setError("root", {
-                              message: "There was an error deleting your event",
-                            });
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <DeleteEventAlert
+              isDeletePending={isDeletePending}
+              isSubmitting={form.formState.isSubmitting}
+              startDeleteTransition={startDeleteTransition}
+              eventId={event.id}
+              setError={setFormError}
+            />
           )}
+
           <Button
             asChild
             variant="outline"
@@ -203,6 +161,7 @@ export const EventForm = ({ event }: EventFormProps) => {
           >
             <Link href={ROUTES.events.home()}>Cancel</Link>
           </Button>
+
           <Button
             type="submit"
             disabled={isDeletePending || form.formState.isSubmitting}

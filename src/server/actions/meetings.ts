@@ -1,12 +1,12 @@
 "use server";
 
+import "use-server";
 import { db } from "@/drizzle/db";
 import { getValidTimesFromSchedule } from "@/lib/getValidTimesFromSchedule";
 import {
   MeetingActionSchemaType,
   meetingActionSchema,
 } from "@/schema/meetings";
-import "use-server";
 import { createCalendarEvent } from "./googleCalendar";
 import { redirect } from "next/navigation";
 import { fromZonedTime } from "date-fns-tz";

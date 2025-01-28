@@ -11,9 +11,9 @@ import { db } from "@/drizzle/db";
 import { ROUTES } from "@/data/routes";
 
 export default async function NotFound() {
-  const userData = await db.query.EventTable.findFirst({
-    where: ({ isActive }, { eq }) => {
-      return eq(isActive, true);
+  const userData = await db.query.ScheduleTable.findFirst({
+    where: ({ timezone }, { isNotNull }) => {
+      return isNotNull(timezone);
     },
   });
 

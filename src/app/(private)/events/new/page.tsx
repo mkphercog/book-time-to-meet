@@ -1,4 +1,4 @@
-import { EventForm } from "@/components/forms/EventForm";
+import { EventForm } from "@/components/forms/event";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function NewEventPage() {
